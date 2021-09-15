@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ConcatAdapter
 import com.example.movieapp.R
 import com.example.movieapp.core.Resource
@@ -24,9 +25,13 @@ import com.example.movieapp.ui.movie.adapter.concat.UpcomingConcatAdapter
 class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieClickListener {
 
     private lateinit var binding: FragmentMovieBinding
-    private val viewModel by viewModels<MovieViewModel> {MovieViewModelFactory(MovieRepositoryImpl(
-        MovieDataSource(RetrofitClient.webService)
-    ))}
+    private val viewModel by viewModels<MovieViewModel> {
+        MovieViewModelFactory(
+            MovieRepositoryImpl(
+                MovieDataSource(RetrofitClient.webService)
+            )
+        )
+    }
 
     private lateinit var concatAdapter: ConcatAdapter
 
@@ -35,23 +40,47 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieCli
 
         binding = FragmentMovieBinding.bind(view)
         concatAdapter = ConcatAdapter()
-        viewModel.fetchMainScreenMovies().observe(viewLifecycleOwner, Observer {result->
-            when (result){
-                is Resource.Loading->{
+        viewModel.fetchMainScreenMovies().observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
+                is Resource.Loading -> {
                     Log.d("LiveData", "cargando...loading")
                     binding.progressBar.visibility = View.VISIBLE
                 }
-                is Resource.Success->{
+                is Resource.Success -> {
                     Log.d("LiveData", "${result.data.toString()}")
                     binding.progressBar.visibility = View.GONE
                     concatAdapter.apply {
-                        addAdapter(0, UpcomingConcatAdapter(MovieAdapter(result.data.first.results, this@MovieFragment)))
-                        addAdapter(0, TopRatedConcatAdapter(MovieAdapter(result.data.second.results, this@MovieFragment)))
-                        addAdapter(0, PopularConcatAdapter(MovieAdapter(result.data.third.results, this@MovieFragment)))
-                        }
+                        addAdapter(
+                            0,
+                            UpcomingConcatAdapter(
+                                MovieAdapter(
+                                    result.data.first.results,
+                                    this@MovieFragment
+                                )
+                            )
+                        )
+                        addAdapter(
+                            0,
+                            TopRatedConcatAdapter(
+                                MovieAdapter(
+                                    result.data.second.results,
+                                    this@MovieFragment
+                                )
+                            )
+                        )
+                        addAdapter(
+                            0,
+                            PopularConcatAdapter(
+                                MovieAdapter(
+                                    result.data.third.results,
+                                    this@MovieFragment
+                                )
+                            )
+                        )
+                    }
                     binding.rvMovies.adapter = concatAdapter
                 }
-                is Resource.Failure->{
+                is Resource.Failure -> {
                     Log.d("LiveData", "${result.exception}")
                 }
             }
@@ -59,6 +88,16 @@ class MovieFragment : Fragment(R.layout.fragment_movie), MovieAdapter.OnMovieCli
     }
 
     override fun OnMovieClick(movie: Movie) {
-        Log.d("MovieClick", "OnMovieClick: $movie")
+        val action = MovieFragmentDirections.actionMovieFragmentToMovieDetailFragment(
+            movie.poster_path,
+            movie.backdrop_path,
+            movie.title,
+            movie.overview,
+            movie.vote_average.toFloat(),
+            movie.vote_count,
+            movie.original_language,
+            movie.release_date
+        )
+        findNavController().navigate(action)
     }
 }

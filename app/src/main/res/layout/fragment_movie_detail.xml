@@ -52,7 +52,7 @@
         app:layout_constraintGuide_begin="333dp" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/txt_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-black"
@@ -80,7 +80,7 @@
         tools:text="7.1 (4123 Reviews)" />
 
     <TextView
-        android:id="@+id/txt_cl"
+        android:id="@+id/txt_release"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -102,9 +102,9 @@
         android:textColor="@color/white"
         app:drawableStartCompat="@drawable/ic_baseline_language_24"
         app:drawableTint="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/txt_cl"
-        app:layout_constraintStart_toStartOf="@+id/txt_cl"
-        app:layout_constraintTop_toBottomOf="@+id/txt_cl"
+        app:layout_constraintEnd_toEndOf="@+id/txt_release"
+        app:layout_constraintStart_toStartOf="@+id/txt_release"
+        app:layout_constraintTop_toBottomOf="@+id/txt_release"
         tools:text="Languaje En/Es" />
 
     <LinearLayout
