@@ -17,7 +17,8 @@ data class Movie(
     val title: String = "",
     val video: Boolean = false,
     val vote_average: Double = -1.0,
-    val vote_count: Int = -1
+    val vote_count: Int = -1,
+    val movie_type: String
 )
 
 data class MovieList(val results: List<Movie> = listOf())
@@ -55,16 +56,16 @@ data class MovieEntity(
     val movie_type: String = ""
 )
 
-fun List<MovieEntity>.toMovieList(): MovieList{
+fun List<MovieEntity>.toMovieList(): MovieList {
 
     val resultlist = mutableListOf<Movie>()
-    this.forEach{ movieEntity ->
+    this.forEach { movieEntity ->
         resultlist.add(movieEntity.toMovie())
     }
     return MovieList(resultlist)
 }
 
-fun MovieEntity.toMovie():Movie = Movie(
+fun MovieEntity.toMovie(): Movie = Movie(
     this.id,
     this.adult,
     this.backdrop_path,
@@ -77,5 +78,23 @@ fun MovieEntity.toMovie():Movie = Movie(
     this.title,
     this.video,
     this.vote_average,
-    this.vote_count
+    this.vote_count,
+    this.movie_type
+)
+
+fun Movie.toMovieEntity(movie_type: String): MovieEntity = MovieEntity(
+    this.id,
+    this.adult,
+    this.backdrop_path,
+    this.original_language,
+    this.original_title,
+    this.overview,
+    this.popularity,
+    this.poster_path,
+    this.release_date,
+    this.title,
+    this.video,
+    this.vote_average,
+    this.vote_count,
+    movie_type = movie_type
 )
