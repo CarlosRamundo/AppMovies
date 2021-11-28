@@ -1,9 +1,12 @@
 package com.example.movieapp.data.model
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class Movie(
     val id: Int = -1,
     val adult: Boolean = false,
@@ -18,8 +21,8 @@ data class Movie(
     val video: Boolean = false,
     val vote_average: Double = -1.0,
     val vote_count: Int = -1,
-    val movie_type: String
-)
+    val movie_type: String = ""
+):Parcelable
 
 data class MovieList(val results: List<Movie> = listOf())
 
@@ -78,8 +81,7 @@ fun MovieEntity.toMovie(): Movie = Movie(
     this.title,
     this.video,
     this.vote_average,
-    this.vote_count,
-    this.movie_type
+    this.vote_count
 )
 
 fun Movie.toMovieEntity(movie_type: String): MovieEntity = MovieEntity(
